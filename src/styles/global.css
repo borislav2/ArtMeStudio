@@ -67,9 +67,11 @@ section{padding-block:clamp(64px,9vw,128px);overflow-x:clip}
 .nav a:hover{color:var(--paper)}
 .hdr-cta{display:none}
 .menu-btn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--paper);border-radius:10px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer}
-.mnav{border-top:1px solid var(--line);padding-block:12px 20px}
+.hdr .mnav{display:block;border-top:1px solid var(--line);padding-block:12px 20px;max-height:calc(100dvh - 68px);overflow-y:auto}
 .mnav a{display:block;padding:12px 0;text-decoration:none;font-family:var(--f-display);font-size:1.25rem;font-weight:700;border-bottom:1px solid var(--line)}
-.mnav .btn{margin-top:16px;width:100%}
+.mnav .btn{margin-top:12px;width:100%;display:flex}
+.mnav a:not(.btn){text-transform:uppercase;font-stretch:85%}
+body:has(#mnav:not([hidden])) .sticky-cta,body:has(#mnav:not([hidden])) .mob-bar{display:none}
 @media (min-width:1040px){.nav{display:flex}.hdr-cta{display:inline-flex;--bh:44px}.menu-btn,.mnav{display:none!important}}
 
 /* Hero */

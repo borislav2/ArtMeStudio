@@ -38,9 +38,8 @@ const ld = { "@context": "https://schema.org", "@type": "LocalBusiness", name: S
   {demo && <div class="demo-bar" role="note">Демо версия на новия сайт. Поръчките и запитванията тук са само за тест.</div>}
   <header class="hdr">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="Art Me Graphics, начало">
-        <span class="logo-mark" aria-hidden="true">AM</span>
-        <span>ART ME<small>Мото графики</small></span>
+      <a class="logo" href="/" aria-label="Art Me Studio, начало">
+        <img class="logo-img" src="/logo-light.png" alt="Art Me Studio" width="104" height="42">
       </a>
       <nav class="nav" aria-label="Основна навигация">
         {nav.map(([h, l]) => <a href={h} aria-current={Astro.url.pathname.startsWith(h) && h !== "/" ? "page" : undefined}>{l}</a>)}
@@ -70,7 +69,7 @@ const ld = { "@context": "https://schema.org", "@type": "LocalBusiness", name: S
     <div class="wrap">
       <div class="foot-grid">
         <div>
-          <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">AM</span><span>ART ME<small>Мото графики</small></span></a>
+          <a class="logo" href="/" aria-label="Art Me Studio, начало"><img class="logo-img" src="/logo-light.png" alt="Art Me Studio" width="117" height="47" loading="lazy" style="height:47px"></a>
           <p style="margin-top:14px;max-width:32ch">Студио за дизайн, печат и брандиране на превозни средства. Левски, България.</p>
           <p style="margin-top:12px"><a href={SITE.phoneHref}>{SITE.phone}</a><br><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
         </div>

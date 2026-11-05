@@ -1,0 +1,21 @@
+---
+import Base from "../../layouts/Base.astro";
+import { SITE } from "../../data/site";
+---
+<Base title="Поръчката е приета" noindex>
+  <section><div class="wrap" style="max-width:760px">
+    <p class="eyebrow">Благодарим</p>
+    <h1 style="font-size:var(--s-xl);text-transform:uppercase;margin-top:14px">Поръчка <span id="no" style="color:var(--plate)"></span> е приета</h1>
+    <div class="prose" style="margin-top:24px">
+      <p id="payMsg">Изпратихме ти имейл с данните за банков превод на капарото. Щом то постъпи, започваме дизайна.</p>
+      <p><strong>Какво следва:</strong> изпращаме ти 3D визуализация на твоя модел за одобрение. Имаш {SITE.freeCorrections} безплатни корекции. Печатаме след твоето одобрение и изпращаме до {SITE.leadDays} работни дни.</p>
+      <p>Въпроси? Обади се на <a href={SITE.phoneHref}>{SITE.phone}</a>.</p>
+    </div>
+    <div class="hero-ctas"><a class="btn btn-ghost" href="/grafiki">Обратно към графиките</a></div>
+  </div></section>
+</Base>
+<script>
+  const q = new URLSearchParams(location.search);
+  document.getElementById("no")!.textContent = (q.get("no") || "").replace(/[^\w-]/g, "");
+  if (q.get("pay") === "card") document.getElementById("payMsg")!.textContent = "Плащането на капарото с карта е получено. Изпратихме ти потвърждение по имейл.";
+</script>

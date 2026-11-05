@@ -1,0 +1,8 @@
+---
+import { RIDERS } from "../data/site";
+---
+<div class="riders">
+  {RIDERS.map((r, i) => (
+    <div class="rider"><span class="no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><span><h3>{r.name}</h3><p>{r.note}</p></span><span></span></div>
+  ))}
+</div>

@@ -1,0 +1,107 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import { PRODUCTS, productTitle, type Product } from "../../data/products";
+import { CATEGORIES, SITE } from "../../data/site";
+export function getStaticPaths() { return PRODUCTS.map(p => ({ params: { slug: p.slug }, props: { p } })); }
+const { p } = Astro.props as { p: Product };
+const cat = CATEGORIES.find(c => c.key === p.category)!;
+const title = productTitle(p);
+const quoteHref = `/personalen-dizajn?d=${encodeURIComponent((p.brand + " " + p.colourway).trim())}#quote`;
+const related = PRODUCTS.filter(x => x.slug !== p.slug && (x.brand === p.brand || x.category === p.category)).slice(0, 3);
+const ld = { "@context": "https://schema.org", "@type": "Product", name: `${title}${p.colourway ? " " + p.colourway : ""}`, brand: { "@type": "Brand", name: "Art Me Graphics" },
+  category: cat.title, image: p.images.map(i => new URL(i, Astro.site).toString()),
+  ...(p.price != null ? { offers: { "@type": "Offer", priceCurrency: "EUR", price: p.price, availability: "https://schema.org/MadeToOrder", url: new URL(`/produkt/${p.slug}`, Astro.site).toString() } } : {}) };
+---
+<Base title={`${title}${p.colourway ? " " + p.colourway : ""}`} description={`${title}${p.colourway ? ", дизайн " + p.colourway : ""}. ARLON фолио, ламинат ProTec 3960, 3D визуализация преди печат.${p.price != null ? ` ${p.price} €.` : " Цена по оферта."}`}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(ld)} />
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Път" style="padding-top:28px"><a href="/">Начало</a><span>/</span><a href="/grafiki">Графики</a><span>/</span><a href={`/grafiki/${cat.key}`}>{cat.title}</a></nav>
+    <div class="pdp">
+      <div class="pdp-media">
+        <div class="pdp-photo"><img id="mainImg" src={p.images[0]} alt={`${title}${p.colourway ? ", дизайн " + p.colourway : ""}`} width="270" height="320" fetchpriority="high"></div>
+        {p.images.length > 1 && (
+          <div class="thumbs" role="group" aria-label="Снимки">
+            {p.images.map((src, i) => <button type="button" data-src={src} aria-pressed={i === 0 ? "true" : "false"} aria-label={`Снимка ${i + 1}`}><img src={src} alt="" width="54" height="64" loading="lazy"></button>)}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <p class="eyebrow">{p.brand}{p.colourway && ` · ${p.colourway}`}</p>
+        <h1 style="margin-top:14px">{title}</h1>
+        {p.price != null
+          ? <p class="price-big">{p.oldPrice && <s>{p.oldPrice} €</s>}{p.price} €</p>
+          : <p class="price-big" style="font-size:1.4rem;text-transform:uppercase">Цена по оферта</p>}
+        <p class="lead" style="margin-top:8px">{p.price != null ? "Пълен комплект: дизайн, печат, ламинат и рязане по шаблон за избрания модел." : "Цената зависи от модела и броя части. Пиши ни модела и ще получиш оферта в рамките на работния ден."}</p>
+
+        <form class="opts" id="buy" data-slug={p.slug} data-name={`${p.brand} ${p.colourway}`.trim()} novalidate>
+          {p.fitments.length ? (
+            <fieldset>
+              <legend class="opt-label">Модел и година</legend>
+              <div class="radio-cards">
+                {p.fitments.map((f, i) => <label><input type="radio" name="fitment" value={f} checked={i === 0}><span>{f}</span></label>)}
+              </div>
+            </fieldset>
+          ) : (
+            <div><label class="opt-label" for="bFit">Модел и година</label><input class="inp" id="bFit" name="fitment" maxlength="80" required placeholder="напр. S1000RR 2021"></div>
+          )}
+          <div class="two">
+            <div><label class="opt-label" for="bNo">Номер</label><input class="inp" id="bNo" name="number" inputmode="numeric" maxlength="3" value="27"></div>
+            <div><label class="opt-label" for="bName">Име (по желание)</label><input class="inp" id="bName" name="name" maxlength="24" placeholder="напр. GUMATA"></div>
+          </div>
+          {cat.install && (
+            <label class="check"><input type="checkbox" name="install"><span><b>Искам професионален монтаж</b><small>{cat.install}, точната цена се потвърждава според модела</small></span></label>
+          )}
+          <p class="err" id="bErr" role="alert" style="color:#FF8A7A;font-size:var(--s-xs);margin:0"></p>
+          <div class="buy-row">
+            {p.price != null
+              ? <button class="btn btn-plate" type="submit">Добави в количката</button>
+              : <button class="btn btn-plate" type="submit" data-quote-only>Поискай оферта</button>}
+            <a class="btn btn-ghost" href={quoteHref}>Промени дизайна</a>
+          </div>
+        </form>
+
+        <ul class="assure">
+          <li>3D визуализация върху твоя модел преди печат</li>
+          <li>{SITE.freeCorrections} безплатни корекции, всяка следваща {SITE.extraCorrection} €</li>
+          <li>Изработка до {SITE.leadDays} работни дни след одобрение</li>
+          <li>Капаро {SITE.advancePct}%, остатъкът при получаване</li>
+          <li>Доставка с Еконт до офис или адрес</li>
+        </ul>
+      </div>
+    </div>
+
+    {related.length > 0 && (
+      <section style="padding-top:0" aria-labelledby="relH">
+        <div class="sec-head"><h2 id="relH">Още дизайни</h2></div>
+        <div class="prods">{related.map(r => <ProductCard p={r} />)}</div>
+      </section>
+    )}
+  </div>
+</Base>
+<script>
+  import { addLine } from "../../lib/cart";
+  const form = document.getElementById("buy") as HTMLFormElement;
+  const main = document.getElementById("mainImg") as HTMLImageElement;
+  document.querySelectorAll<HTMLButtonElement>(".thumbs button").forEach(b => b.addEventListener("click", () => {
+    main.src = b.dataset.src!; document.querySelectorAll(".thumbs button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  }));
+  const no = form.querySelector<HTMLInputElement>("#bNo")!;
+  no.addEventListener("input", () => { no.value = no.value.replace(/\D/g, "").slice(0, 3); });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const fd = new FormData(form); const err = document.getElementById("bErr")!; err.textContent = "";
+    const fitment = String(fd.get("fitment") || "").trim();
+    if (!fitment) { err.textContent = "Напиши модела и годината, за да сме сигурни, че графиките пасват."; (form.querySelector("#bFit") as HTMLInputElement)?.focus(); return; }
+    if (form.querySelector("[data-quote-only]")) {
+      const q = new URLSearchParams({ d: form.dataset.name!, m: fitment, n: [fd.get("number"), fd.get("name")].filter(Boolean).join(" ") });
+      location.href = `/personalen-dizajn?${q}#quote`; return;
+    }
+    addLine({ slug: form.dataset.slug!, fitment, number: String(fd.get("number") || ""), name: String(fd.get("name") || ""), install: fd.get("install") === "on" });
+    const t = document.getElementById("toast")!;
+    t.innerHTML = 'Добавено в количката. <a href="/kolichka" style="color:inherit">Към количката</a>';
+    t.style.pointerEvents = "auto"; t.classList.add("show");
+    setTimeout(() => { t.classList.remove("show"); t.style.pointerEvents = "none"; }, 4000);
+  });
+</script>

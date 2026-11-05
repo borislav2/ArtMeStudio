@@ -1,0 +1,15 @@
+---
+import Base from "../../layouts/Base.astro";
+import Catalog from "../../components/Catalog.astro";
+import { CATEGORIES } from "../../data/site";
+export function getStaticPaths() { return CATEGORIES.map(c => ({ params: { cat: c.key }, props: { c } })); }
+const { c } = Astro.props;
+---
+<Base title={`Графики за ${c.title}`} description={`Графични комплекти: ${c.title}. ${c.blurb}. 3D визуализация преди печат, изработка до 7 работни дни.`}>
+  <div class="page-head"><div class="wrap">
+    <nav class="crumbs" aria-label="Път"><a href="/">Начало</a><span>/</span><a href="/grafiki">Графики</a><span>/</span><span>{c.title}</span></nav>
+    <h1>Графики: {c.title}</h1>
+    <p class="lead">{c.blurb}.{c.install ? ` Професионален монтаж: ${c.install}.` : ""}</p>
+  </div></div>
+  <section style="padding-top:32px"><div class="wrap"><Catalog cat={c.key} /></div></section>
+</Base>

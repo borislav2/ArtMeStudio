@@ -1,0 +1,31 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero3D from "../components/Hero3D.astro";
+import Process from "../components/Process.astro";
+import QuoteForm from "../components/QuoteForm.astro";
+import Riders from "../components/Riders.astro";
+---
+<Base title="Персонален дизайн" description="Персонален дизайн на мото графики по твоя идея: номер, име, отбор и спонсори. 3D визуализация преди печат, 3 безплатни корекции.">
+  <section class="hero" aria-labelledby="pdH">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Персонален дизайн</p>
+        <h1 id="pdH" style="margin-top:18px"><span class="line">Твоята идея.</span><span class="line"><em>Твоят номер.</em></span></h1>
+        <p class="lead">Проектираме графики от нулата за твоя мотор, ATV или джет. Добавяме номер, име, отбор и спонсори. Виждаш всичко в 3D, преди да печатаме.</p>
+        <div class="hero-ctas"><a class="btn btn-plate" href="#quote">Започни проект</a><a class="btn btn-ghost" href="/grafiki">Виж готовите дизайни</a></div>
+      </div>
+      <Hero3D id="pdKit" showPrice={false}><p class="cfg-name">Избери стил за начало. Ще го пренесем във формата.</p></Hero3D>
+    </div>
+  </section>
+  <section class="process" aria-labelledby="stH">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Процес</p><h2 id="stH" style="margin-top:14px">Как протича проектът</h2></div>
+      <Process />
+    </div>
+  </section>
+  <section aria-labelledby="rH"><div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Доверяват ни се</p><h2 id="rH" style="margin-top:14px">Отбори и състезатели</h2></div>
+    <Riders />
+  </div></section>
+  <section class="quote" aria-label="Запитване" style="padding-top:0"><div class="wrap"><QuoteForm style="Neon Rider" num="27" /></div></section>
+</Base>

@@ -1,0 +1,29 @@
+---
+import { productTitle, type Product } from "../data/products";
+interface Props { p: Product; eager?: boolean }
+const { p, eager = false } = Astro.props;
+const off = p.oldPrice && p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+const title = productTitle(p);
+---
+<article class="prod rv">
+  <div class="prod-art photo">
+    {p.images.length
+      ? <img src={p.images[0]} alt={`${title}${p.colourway ? ", дизайн " + p.colourway : ""}`} loading={eager ? "eager" : "lazy"} decoding="async" width="270" height="320">
+      : <canvas width="640" height="480" data-livery={p.scheme} role="img" aria-label={`Визуализация на дизайн ${p.colourway || p.brand}`}></canvas>}
+    {off ? <span class="badge">−{off}%</span> : p.isNew && <span class="badge new">Ново</span>}
+  </div>
+  <div class="prod-body">
+    <span class="brand">{p.brand}{p.colourway && ` · ${p.colourway}`}</span>
+    <h3><a class="prod-link" href={`/produkt/${p.slug}`} style="text-decoration:none">{title}</a></h3>
+  </div>
+  <div class="prod-foot">
+    {p.price != null
+      ? <span class="price">{p.oldPrice && <s>{p.oldPrice} €</s>}{p.price} €</span>
+      : <span class="price quote-price">По оферта</span>}
+    <a class="btn btn-ghost" href={`/produkt/${p.slug}`} tabindex="-1" aria-hidden="true">Виж</a>
+  </div>
+</article>
+<script>
+  import { paintAll } from "../lib/livery";
+  paintAll();
+</script>

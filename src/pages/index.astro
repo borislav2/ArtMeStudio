@@ -1,0 +1,146 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero3D from "../components/Hero3D.astro";
+import ProductCard from "../components/ProductCard.astro";
+import Process from "../components/Process.astro";
+import Riders from "../components/Riders.astro";
+import Faq from "../components/Faq.astro";
+import QuoteForm from "../components/QuoteForm.astro";
+import { CATEGORIES, SITE } from "../data/site";
+import { PRODUCTS, PROJECTS } from "../data/products";
+const best = PRODUCTS.filter(p => p.featured).slice(0, 8);
+const catImg: Record<string, string> = { motokros: "/img/327.webp", pistovi: "/img/1860.webp", atv: "/img/445.webp" };
+const brands = ["KTM", "Husqvarna", "Yamaha", "Honda", "GASGAS", "Kawasaki", "Beta", "Stark Varg", "Suzuki", "Ducati", "BMW", "Sea-Doo"];
+const arrow = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12L12 4M6 4h6v6"/></svg>`;
+---
+<Base>
+  <section class="hero" aria-labelledby="h1">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Графики за мотокрос, писта, ATV и джетове</p>
+        <h1 id="h1" style="margin-top:18px"><span class="line">Брандирай.</span><span class="line">Карай.</span><span class="line"><em>Впечатлявай.</em></span></h1>
+        <p class="lead">Комплекти, които издържат на кал, камъни и слънце. Печатаме с Roland TrueVIS върху ARLON фолио и ламинираме всеки детайл. Преди печат виждаш своя мотор в 3D и одобряваш всяка линия.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-plate" href="/grafiki">Разгледай графиките
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+          <a class="btn btn-ghost" href="/personalen-dizajn">Персонален дизайн</a>
+        </div>
+        <div class="spec-row" aria-label="Гаранции">
+          <span>3D визуализация преди печат</span><span>{SITE.freeCorrections} безплатни корекции</span><span>Изработка до {SITE.leadDays} работни дни</span>
+        </div>
+      </div>
+      <Hero3D id="heroKit">
+        <p class="cfg-name">Харесва ли ти? <a href="#quote">Поискай този дизайн с твоя номер</a></p>
+      </Hero3D>
+    </div>
+  </section>
+
+  <div class="ticker" aria-label="Марки, за които правим графики">
+    <div class="ticker-track">
+      {brands.map(b => <span>{b}<i>/</i></span>)}
+      {brands.map(b => <span class="dup" aria-hidden="true">{b}<i>/</i></span>)}
+    </div>
+  </div>
+
+  <section aria-labelledby="catH">
+    <div class="wrap">
+      <div class="sec-head split rv">
+        <div><p class="eyebrow">Категории</p><h2 id="catH" style="margin-top:14px">Избери машината. Ние правим визията.</h2></div>
+        <p class="lead">Всички графики се адаптират по модел и година, така че пасват точно на пластмасите ти.</p>
+      </div>
+      <div class="cats">
+        {CATEGORIES.map(c => (
+          <a class="cat rv" href={`/grafiki/${c.key}`}>{catImg[c.key] ? <img class="cat-img" src={catImg[c.key]} alt="" loading="lazy" width="270" height="320"> : <canvas aria-hidden="true" data-livery={c.scheme} data-fit="box"></canvas>}<span class="go" aria-hidden="true" set:html={arrow}></span><h3>{c.title}</h3><p>{c.blurb}</p></a>
+        ))}
+        <a class="cat custom rv" href="/personalen-dizajn"><span class="go" aria-hidden="true" set:html={arrow}></span><h3>Персонален дизайн</h3><p>Твоята идея, име, номер и спонсори. Проектираме от нулата.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="kitsH" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head split rv">
+        <div><p class="eyebrow">Най-търсени</p><h2 id="kitsH" style="margin-top:14px">Готови комплекти</h2></div>
+        <p class="lead">Мотокрос комплектите са с цена от 120 €, която включва дизайн, печат, ламинат и рязане по шаблон. За пистови мотори и ATV даваме оферта според модела.</p>
+      </div>
+      <div class="prods">{best.map(p => <ProductCard p={p} />)}</div>
+      <div class="prods-more"><a class="btn btn-ghost" href="/grafiki">Целият каталог</a></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="projH" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head split rv">
+        <div><p class="eyebrow">Реални проекти</p><h2 id="projH" style="margin-top:14px">Монтирани и на пистата</h2></div>
+        <p class="lead">Така изглеждат графиките ни извън екрана.</p>
+      </div>
+      <div class="projects">
+        {PROJECTS.map(x => <figure class="rv"><img src={x.src} alt={x.alt} loading="lazy" width="270" height="320"><figcaption>{x.cap}</figcaption></figure>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="process" id="process" aria-labelledby="procH">
+    <div class="wrap">
+      <div class="sec-head split rv">
+        <div><p class="eyebrow">Как работим</p><h2 id="procH" style="margin-top:14px">От идея до монтиран комплект за {SITE.leadDays} работни дни</h2></div>
+        <p class="lead">Нищо не отива за печат, преди да го видиш на своя мотор в 3D и да кажеш „да“.</p>
+      </div>
+      <Process />
+    </div>
+  </section>
+
+  <section id="materials" aria-labelledby="matH">
+    <div class="wrap mat-grid">
+      <div class="stack" id="stack" aria-hidden="true">
+        <div class="layer l1"></div><div class="layer l2"></div><div class="layer l3"></div><div class="layer l4"></div>
+      </div>
+      <div class="rv">
+        <p class="eyebrow">Материали</p>
+        <h2 id="matH" style="margin-top:14px">Четири слоя между мотора и пистата</h2>
+        <p class="lead" style="margin-top:16px">Евтините графики се белят след първото каране в кал. Нашите са изградени като професионално облепване.</p>
+        <div class="mat-list">
+          <div class="mat-item"><span class="k">L1</span><h3>Фолио с агресивно лепило</h3><p><code>ARLON DPF 8000 Ultra Tack</code> залепва здраво върху текстурирани пластмаси и не пуска при интензивно каране.</p></div>
+          <div class="mat-item"><span class="k">L2</span><h3>Печат с висока резолюция</h3><p><code>Roland TrueVIS</code> дава наситени цветове и остри детайли до най-малкия спонсорски надпис.</p></div>
+          <div class="mat-item"><span class="k">L3</span><h3>Защитен ламинат</h3><p><code>ARLON ProTec 3960</code> пази от надраскване, кал и UV лъчи, а цветовете остават живи години наред.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="riders" class="process" aria-labelledby="ridersH">
+    <div class="wrap">
+      <div class="sec-head split rv">
+        <div><p class="eyebrow">Професионални състезатели</p><h2 id="ridersH" style="margin-top:14px">Карат с нашите графики</h2></div>
+        <p class="lead">Отбори, школи и пилоти, които ни доверяват спонсорската си визия.</p>
+      </div>
+      <Riders />
+    </div>
+  </section>
+
+  <section aria-labelledby="faqH">
+    <div class="wrap faq-grid">
+      <div class="rv">
+        <p class="eyebrow">Въпроси</p>
+        <h2 id="faqH" style="margin-top:14px">Преди да поръчаш</h2>
+        <p class="lead" style="margin-top:16px">Не намираш отговор? Обади се на <a href={SITE.phoneHref} style="color:var(--paper);font-weight:600">{SITE.phone}</a> или виж <a href="/faq">всички въпроси</a>.</p>
+      </div>
+      <Faq limit={6} />
+    </div>
+  </section>
+
+  <section class="quote" aria-label="Запитване" style="padding-top:0">
+    <div class="wrap"><QuoteForm style="Neon Rider" num="27" /></div>
+  </section>
+</Base>
+<script>
+  import { paintAll } from "../lib/livery";
+  paintAll();
+  const stack = document.getElementById("stack");
+  if (stack && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ticking = false;
+    const upd = () => { ticking = false; const r = stack.getBoundingClientRect(), vh = innerHeight;
+      const p = Math.min(1, Math.max(0, 1 - (r.top + r.height / 2 - vh * 0.45) / (vh * 0.6))); stack.style.setProperty("--p", (0.25 + p * 0.75).toFixed(3)); };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true }); upd();
+  }
+</script>

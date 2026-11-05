@@ -49,9 +49,11 @@ const { style = "", num = "" } = Astro.props;
       if (!$("qOk").checked) { err.textContent = "Потвърди съгласието с общите условия, за да изпратиш запитването."; $("qOk").focus(); return; }
       btn.disabled = true; btn.textContent = "Изпращане…";
       try {
-        const res = await fetch("/api/quote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(f))) });
-        const j = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(j.error || "Неуспешно изпращане.");
+        if (import.meta.env.PUBLIC_STATIC !== "true") { // static demo has no server: simulate success
+          const res = await fetch("/api/quote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(f))) });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(j.error || "Неуспешно изпращане.");
+        }
         done.hidden = false; done.innerHTML = "<b>Запитването е изпратено.</b> Ще се свържем с теб в рамките на работния ден.";
         f.querySelectorAll("input:not([type=checkbox]),textarea").forEach(x => ((x as HTMLInputElement).disabled = true));
         btn.textContent = "Изпратено";

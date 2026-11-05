@@ -5,7 +5,7 @@ import netlify from "@astrojs/netlify";
 // Pages are prerendered (static, fast). Only /api/* runs on the server.
 // On Netlify (preview hosting) the API runs as Netlify Functions; elsewhere as a Node server.
 export default defineConfig({
-  site: process.env.URL || "https://www.artmegraphics.com",
+  site: process.env.SITE_URL || process.env.URL || "https://www.artmegraphics.com",
   output: "static",
   adapter: process.env.NETLIFY ? netlify() : node({ mode: "standalone" }),
   trailingSlash: "ignore",

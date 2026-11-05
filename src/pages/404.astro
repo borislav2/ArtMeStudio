@@ -1,11 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
+import { SITE } from "../data/site";
 ---
 <Base title="Страницата не е намерена" noindex>
   <section><div class="wrap" style="max-width:720px">
     <p class="eyebrow">404</p>
     <h1 style="font-size:var(--s-xl);text-transform:uppercase;margin-top:14px">Тази страница излезе от пистата</h1>
-    <p class="lead" style="margin-top:16px">Адресът може да е стар. Разгледай графиките или ни пиши.</p>
+    <p class="lead" style="margin-top:16px">Адресът може да е стар. Разгледай графиките или ни се обади на <a href={SITE.phoneHref}>{SITE.phone}</a>.</p>
     <div class="hero-ctas"><a class="btn btn-plate" href="/grafiki">Графики</a><a class="btn btn-ghost" href="/kontakti">Контакти</a></div>
   </div></section>
 </Base>

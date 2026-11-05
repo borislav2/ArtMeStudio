@@ -28,13 +28,14 @@ import Base from "../../layouts/Base.astro";
       <div class="f"><label for="cNote">Бележка</label><textarea id="cNote" name="note" maxlength="2000" placeholder="Спонсори, специфични цветове, удобно време за обаждане…"></textarea></div>
       <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
       <label class="consent" for="cOk"><input id="cOk" name="consent" type="checkbox" required> <span>Съгласен съм с <a href="/obshti-usloviya">общите условия</a>, включително че капарото не се връща след започване на работа.</span></label>
+      <label class="consent" for="cCustom"><input id="cCustom" name="customConsent" type="checkbox" required> <span>Разбирам, че графиките се изработват по поръчка по мои параметри (модел, номер, име) и за тях няма право на отказ в 14-дневен срок.</span></label>
       <p class="f err" id="cErr" role="alert"></p>
       <button class="btn btn-plate" type="submit">Потвърди поръчката</button>
     </form>
     <aside class="summary" aria-label="Обобщение">
       <div id="coLines"></div>
       <div class="row total"><span>Общо</span><span id="cTot"></span></div>
-      <div class="row adv"><span>Капаро сега (50%)</span><span id="cAdv"></span></div>
+      <div class="row adv"><span>Капаро 50% сега</span><span id="cAdv"></span></div>
       <p class="note">След поръчката ще ти изпратим 3D визуализация. Печатаме само след твоето одобрение.</p>
     </aside>
   </div>

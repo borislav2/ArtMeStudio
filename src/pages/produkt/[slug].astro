@@ -51,7 +51,7 @@ const ld = { "@context": "https://schema.org", "@type": "Product", name: `${titl
             <div><label class="opt-label" for="bName">Име (по желание)</label><input class="inp" id="bName" name="name" maxlength="24" placeholder="напр. GUMATA"></div>
           </div>
           {cat.install && (
-            <label class="check"><input type="checkbox" name="install"><span><b>Искам професионален монтаж</b><small>{cat.install}, точната цена се потвърждава според модела</small></span></label>
+            <label class="check"><input type="checkbox" name="install"><span><b>Искам професионален монтаж</b><small>{cat.install}. Точната цена се потвърждава според модела.</small></span></label>
           )}
           <p class="err" id="bErr" role="alert" style="color:#FF8A7A;font-size:var(--s-xs);margin:0"></p>
           <div class="buy-row">
@@ -65,8 +65,8 @@ const ld = { "@context": "https://schema.org", "@type": "Product", name: `${titl
         <ul class="assure">
           <li>3D визуализация върху твоя модел преди печат</li>
           <li>{SITE.freeCorrections} безплатни корекции, всяка следваща {SITE.extraCorrection} €</li>
-          <li>Изработка до {SITE.leadDays} работни дни след одобрение</li>
-          <li>Капаро {SITE.advancePct}%, остатъкът при получаване</li>
+          <li>До {SITE.leadDays} работни дни след одобрението</li>
+          <li>Капаро {SITE.advancePct}%, остатъкът при получаване на поръчката</li>
           <li>Доставка с Еконт до офис или адрес</li>
         </ul>
       </div>

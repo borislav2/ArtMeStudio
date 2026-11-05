@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     await record("orders", { orderNo, ...o, lines, subtotal, advance });
     await sendMail(env("MAIL_TO") || SITE.email, `Нова поръчка ${orderNo} · ${subtotal} €`, summary, o.email);
     const bank = o.payment === "bank"
-      ? `\n\nКапаро за превод: ${advance} €\nОснование: ${orderNo}\nБанкови данни: ще ги получиш в отделно писмо от студиото.` // TODO: put IBAN here once provided
+      ? `\n\nКапаро за превод: ${advance} €\nОснование: ${orderNo}\nБанкови данни: ${env("BANK_IBAN") ? `IBAN ${env("BANK_IBAN")}${env("BANK_HOLDER") ? `, получател ${env("BANK_HOLDER")}` : ""}` : "ще ги получиш в отделно писмо от студиото."}`
       : "";
     await sendMail(o.email, `Поръчка ${orderNo} е приета · Art Me Graphics`,
       `Здравей, ${clean(o.name, 80)}!\n\nБлагодарим за поръчката. Ето обобщение:\n\n${itemsText}\n\nОбщо: ${subtotal} €${bank}\n\nСледваща стъпка: изпращаме ти 3D визуализация за одобрение. Имаш ${SITE.freeCorrections} безплатни корекции. Печатаме след одобрение, до ${SITE.leadDays} работни дни.\n\nВъпроси: ${SITE.phone}\nArt Me Graphics`);
@@ -52,7 +52,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     const s = await stripe.checkout.sessions.create({
       mode: "payment", customer_email: o.email, locale: "bg", client_reference_id: orderNo,
       line_items: [{ quantity: 1, price_data: { currency: "eur", unit_amount: Math.round(advance * 100), product_data: { name: `Капаро 50% · поръчка ${orderNo}` } } }],
-      success_url: `${site}/porachka/uspeh?no=${orderNo}&pay=card`, cancel_url: `${site}/porachka/uspeh?no=${orderNo}&pay=bank`
+      success_url: `${site}/porachka/uspeh?no=${orderNo}&pay=card`, cancel_url: `${site}/porachka/uspeh?no=${orderNo}&pay=cancel`
     });
     return json({ orderNo, payUrl: s.url });
   }

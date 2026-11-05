@@ -360,3 +360,4 @@ legend{padding:0;margin-bottom:8px}
 @media (min-width:1040px){.hdr-call,.sticky-cta{display:none}}
 @media (max-width:1039px){footer{padding-bottom:84px}}
 .fact:last-child b{color:var(--uv)} /* the "UV" fact in UV violet */
+.logo-img{height:42px;width:auto;display:block}

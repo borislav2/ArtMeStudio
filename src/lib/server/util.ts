@@ -25,9 +25,15 @@ export async function sendMail(to: string, subject: string, text: string, replyT
 
 /** Append-only JSON-lines log, a backup of every order/quote in case an email gets lost. */
 export async function record(kind: string, data: unknown) {
-  const dir = env("DATA_DIR") || "./data";
-  await mkdir(dir, { recursive: true });
-  await appendFile(path.join(dir, `${kind}.jsonl`), JSON.stringify({ at: new Date().toISOString(), ...(data as object) }) + "\n");
+  const line = JSON.stringify({ at: new Date().toISOString(), kind, ...(data as object) });
+  try {
+    const dir = env("DATA_DIR") || (env("NETLIFY") ? "/tmp/artme" : "./data");
+    await mkdir(dir, { recursive: true });
+    await appendFile(path.join(dir, `${kind}.jsonl`), line + "\n");
+  } catch (e) {
+    // Read-only or ephemeral filesystem (serverless): keep the record in the logs instead of failing the order.
+    console.log(`[record] ${line}`);
+  }
 }
 
 // Tiny in-memory rate limit: N requests per IP per window.

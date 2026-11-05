@@ -348,3 +348,4 @@ legend{padding:0;margin-bottom:8px}
 .thumbs button[aria-pressed="true"]{border-color:var(--plate)}
 .thumbs img{width:100%;height:100%;object-fit:contain}
 .line img{width:96px;height:72px;object-fit:contain;background:#F4F4F2;border-radius:8px;display:block}
+.demo-bar{background:var(--plate);color:var(--plate-ink);text-align:center;font-size:var(--s-xs);font-weight:600;padding:8px var(--gutter-r) 8px var(--gutter-l)}

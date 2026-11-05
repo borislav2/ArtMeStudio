@@ -1,0 +1,10 @@
+---
+import { FAQ } from "../data/site";
+interface Props { limit?: number }
+const items = FAQ.slice(0, Astro.props.limit ?? FAQ.length);
+const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: items.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) };
+---
+<div class="faq">
+  {items.map(([q, a]) => <details><summary>{q}</summary><p class="a">{a}</p></details>)}
+</div>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

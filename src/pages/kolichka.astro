@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Количка" noindex>
+  <div class="page-head"><div class="wrap"><p class="eyebrow">Поръчка</p><h1>Количка</h1></div></div>
+  <div class="wrap cart-grid">
+    <div id="lines"><p class="lead" style="padding-block:24px">Зареждане…</p></div>
+    <aside class="summary" id="summary" hidden aria-label="Обобщение">
+      <div class="row"><span>Междинна сума</span><span id="sSub"></span></div>
+      <div class="row"><span>Доставка с Еконт</span><span>по тарифа</span></div>
+      <div class="row total"><span>Общо</span><span id="sTot"></span></div>
+      <div class="row adv"><span>Капаро сега (50%)</span><span id="sAdv"></span></div>
+      <p class="note">Остатъкът се плаща при получаване. Печатаме след като одобриш 3D визуализацията.</p>
+      <a class="btn btn-plate" href="/porachka">Към поръчката</a>
+    </aside>
+  </div>
+</Base>
+<script>
+  import { readCart, removeLine, setQty } from "../lib/cart";
+  import { priceLines, eur } from "../lib/pricing";
+  import { SCHEMES, drawLivery } from "../lib/livery";
+  const box = document.getElementById("lines")!, sum = document.getElementById("summary")!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+  function render() {
+    const raw = readCart(); const { lines, subtotal, advance } = priceLines(raw);
+    if (!lines.length) {
+      sum.hidden = true;
+      box.innerHTML = `<div class="empty"><p>Количката е празна.</p><a class="btn btn-plate" href="/grafiki">Разгледай графиките</a></div>`; return;
+    }
+    sum.hidden = false;
+    box.innerHTML = lines.map((l, i) => `
+      <div class="line">
+        ${l.image ? `<img src="${l.image}" alt="" width="96" height="72">` : `<canvas width="192" height="144" data-s="${l.scheme}" aria-hidden="true"></canvas>`}
+        <div>
+          <h3><a href="/produkt/${l.slug}" style="text-decoration:none">${esc(l.title)}</a></h3>
+          <p class="meta">${esc(l.fitment)}${l.number ? ` · №${esc(l.number)}` : ""}${l.name ? ` · ${esc(l.name)}` : ""}${l.install ? ` · монтаж (${esc(l.installNote || "")})` : ""}</p>
+          <div class="ctl">
+            <span class="qty"><button type="button" data-dec="${raw[i].id}" aria-label="По-малко">−</button><output aria-live="polite">${l.qty}</output><button type="button" data-inc="${raw[i].id}" aria-label="Повече">+</button></span>
+            <button class="link-btn" type="button" data-rm="${raw[i].id}">Премахни</button>
+          </div>
+        </div>
+        <span class="lt">${eur(l.total)}</span>
+      </div>`).join("");
+    box.querySelectorAll<HTMLCanvasElement>("canvas[data-s]").forEach(c => drawLivery(c.getContext("2d")!, c.width, c.height, SCHEMES[c.dataset.s!]));
+    document.getElementById("sSub")!.textContent = eur(subtotal);
+    document.getElementById("sTot")!.textContent = eur(subtotal);
+    document.getElementById("sAdv")!.textContent = eur(advance);
+  }
+  box.addEventListener("click", e => {
+    const t = (e.target as HTMLElement).closest("button"); if (!t) return;
+    const cart = readCart();
+    if (t.dataset.rm) removeLine(t.dataset.rm);
+    if (t.dataset.inc) { const l = cart.find(x => x.id === t.dataset.inc)!; setQty(l.id, l.qty + 1); }
+    if (t.dataset.dec) { const l = cart.find(x => x.id === t.dataset.dec)!; setQty(l.id, l.qty - 1); }
+    render();
+  });
+  render();
+</script>

@@ -1,0 +1,8 @@
+# Client preview hosting. Orders/quotes are not emailed unless SMTP_* env vars are set in Netlify.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PUBLIC_DEMO = "true"

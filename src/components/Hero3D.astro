@@ -1,0 +1,59 @@
+---
+// 3D kit stage + colourway/number configurator. `link` = where "order this" goes.
+import { SCHEMES } from "../lib/livery";
+interface Props { scheme?: string; num?: string; showPrice?: boolean; schemes?: string[]; id?: string }
+const { scheme = "neon", num = "27", showPrice = true, schemes = Object.keys(SCHEMES), id = "kit" } = Astro.props;
+---
+<div class="kit" data-kit data-scheme={scheme} data-num={num} id={id}>
+  <div class="stage" data-stage>
+    <span class="stage-tag">Живо 3D · <b data-name>{SCHEMES[scheme].name}</b></span>
+  </div>
+  <div class="cfg" role="group" aria-label="Пробвай визията">
+    <div class="cfg-top">
+      <span class="cfg-title">Пробвай визията</span>
+      {showPrice && <span class="cfg-price">Комплект от <b>120 €</b></span>}
+    </div>
+    <div class="cfg-row">
+      <div class="swatches" role="radiogroup" aria-label="Цветова схема">
+        {schemes.map(k => { const s = SCHEMES[k]; return (
+          <button type="button" class="sw" role="radio" data-k={k} aria-label={s.name} title={s.name} aria-checked={k === scheme ? "true" : "false"} aria-pressed={k === scheme ? "true" : "false"}
+            style={`--a:${s.primary};--b:${s.base};--c:${s.accent}`}></button>); })}
+      </div>
+      <div class="num-field">
+        <label for={`${id}-no`}>Твоят номер</label>
+        <input id={`${id}-no`} data-no inputmode="numeric" maxlength="3" value={num} autocomplete="off">
+      </div>
+    </div>
+    <slot />
+  </div>
+</div>
+<script>
+  import { SCHEMES, drawLivery } from "../lib/livery";
+  document.querySelectorAll<HTMLElement>("[data-kit]").forEach(root => {
+    const stage = root.querySelector<HTMLElement>("[data-stage]")!;
+    let scheme = root.dataset.scheme || "neon", num = root.dataset.num || "27";
+    let handle: { set(s: string, n: string): void } | null = null;
+    const emit = () => {
+      root.querySelectorAll("[data-name]").forEach(el => (el.textContent = SCHEMES[scheme].name));
+      root.dispatchEvent(new CustomEvent("kit:change", { bubbles: true, detail: { scheme, num, name: SCHEMES[scheme].name } }));
+      handle?.set(scheme, num);
+      if (!handle && fb) drawLivery(fb.getContext("2d")!, fb.width, fb.height, SCHEMES[scheme]);
+    };
+    root.querySelectorAll<HTMLButtonElement>(".sw").forEach(b => b.addEventListener("click", () => {
+      root.querySelectorAll(".sw").forEach(x => { const on = x === b; x.setAttribute("aria-checked", String(on)); x.setAttribute("aria-pressed", String(on)); });
+      scheme = b.dataset.k!; emit();
+    }));
+    const no = root.querySelector<HTMLInputElement>("[data-no]")!;
+    no.addEventListener("input", () => { no.value = no.value.replace(/\D/g, "").slice(0, 3); num = no.value || "1"; emit(); });
+    let fb: HTMLCanvasElement | null = null;
+    const fallback = () => {
+      fb = document.createElement("canvas"); fb.width = 900; fb.height = 620; fb.className = "fallback";
+      fb.setAttribute("role", "img"); fb.setAttribute("aria-label", "Визуализация на графичен комплект");
+      stage.appendChild(fb); drawLivery(fb.getContext("2d")!, 900, 620, SCHEMES[scheme]);
+    };
+    // Load three.js only when the stage is near the viewport, after first paint.
+    const start = () => import("../lib/kit3d").then(m => m.mountKit(stage, scheme, num)).then(h => { if (h) handle = h; else fallback(); }).catch(fallback);
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); ("requestIdleCallback" in window ? requestIdleCallback : setTimeout)(start as any, { timeout: 800 } as any); } }, { rootMargin: "200px" });
+    io.observe(stage);
+  });
+</script>

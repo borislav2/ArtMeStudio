@@ -1,0 +1,42 @@
+---
+import ProductCard from "./ProductCard.astro";
+import { CATEGORIES } from "../data/site";
+import { PRODUCTS } from "../data/products";
+interface Props { cat?: string }
+const { cat } = Astro.props;
+const list = cat ? PRODUCTS.filter(p => p.category === cat) : PRODUCTS;
+const brands = [...new Set(list.map(p => p.brand))];
+---
+<nav class="chips" aria-label="Категории">
+  <a class="chip" href="/grafiki" aria-current={!cat ? "page" : undefined}>Всички</a>
+  {CATEGORIES.map(c => <a class="chip" href={`/grafiki/${c.key}`} aria-current={cat === c.key ? "page" : undefined}>{c.title}</a>)}
+</nav>
+{brands.length > 1 && (
+  <div class="chips" role="group" aria-label="Марка" data-brand-filter>
+    <button class="chip" type="button" data-b="" aria-pressed="true">Всички марки</button>
+    {brands.map(b => <button class="chip" type="button" data-b={b} aria-pressed="false">{b}</button>)}
+  </div>
+)}
+{list.length ? (
+  <div class="prods" data-grid>
+    {list.map(p => <div data-brand={p.brand} style="display:contents"><ProductCard p={p} /></div>)}
+  </div>
+) : (
+  <div class="empty">
+    <p>Тук все още няма готови дизайни онлайн. Правим всеки комплект за тази категория по поръчка.</p>
+    <a class="btn btn-plate" href="/personalen-dizajn#quote">Поискай персонален дизайн</a>
+  </div>
+)}
+<div class="empty" style="margin-top:40px">
+  <p>Не намираш своя модел? Адаптираме всеки дизайн към твоя мотор, ATV или джет.</p>
+  <a class="btn btn-ghost" href="/personalen-dizajn#quote">Попитай за твоя модел</a>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-brand-filter]").forEach(bar => {
+    bar.addEventListener("click", e => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-b]"); if (!b) return;
+      bar.querySelectorAll("[data-b]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      document.querySelectorAll<HTMLElement>("[data-grid] [data-brand]").forEach(el => (el.hidden = !!b.dataset.b && el.dataset.brand !== b.dataset.b));
+    });
+  });
+</script>

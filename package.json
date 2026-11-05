@@ -1,0 +1,30 @@
+{
+  "name": "artme-site",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "check": "astro check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^6.6.5",
+    "@astrojs/node": "^9.5.5",
+    "astro": "^5.18.2",
+    "nodemailer": "^6.10.1",
+    "stripe": "^17.7.0",
+    "three": "^0.160.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.24",
+    "@types/three": "^0.160.0",
+    "typescript": "^5.9.3"
+  }
+}

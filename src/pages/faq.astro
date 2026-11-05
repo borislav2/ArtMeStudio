@@ -1,0 +1,9 @@
+---
+import Base from "../layouts/Base.astro";
+import Faq from "../components/Faq.astro";
+import { SITE } from "../data/site";
+---
+<Base title="Често задавани въпроси" description="Срокове, монтаж, капаро, 3D визуализация, корекции и материали. Отговори на най-честите въпроси.">
+  <div class="page-head"><div class="wrap"><p class="eyebrow">Въпроси</p><h1>Често задавани въпроси</h1><p class="lead">Не намираш отговор? Обади се на <a href={SITE.phoneHref}>{SITE.phone}</a>.</p></div></div>
+  <section style="padding-top:32px"><div class="wrap" style="max-width:860px"><Faq /></div></section>
+</Base>

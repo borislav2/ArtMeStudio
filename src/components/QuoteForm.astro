@@ -1,0 +1,66 @@
+---
+import { SITE } from "../data/site";
+interface Props { style?: string; num?: string }
+const { style = "", num = "" } = Astro.props;
+---
+<div class="quote-card" id="quote">
+  <div>
+    <p class="eyebrow">Оферта</p>
+    <h2 style="margin-top:14px">Разкажи ни за мотора си</h2>
+    <p class="lead" style="margin-top:16px">Отговаряме в рамките на работния ден с цена и срок.</p>
+    <dl class="contact-list">
+      <div><dt>Телефон</dt><dd><a href={SITE.phoneHref} style="text-decoration:none">{SITE.phone}</a></dd></div>
+      <div><dt>Имейл</dt><dd><a href={`mailto:${SITE.email}`} style="text-decoration:none">{SITE.email}</a></dd></div>
+      <div><dt>Студио</dt><dd class="sm">{SITE.address}</dd></div>
+    </dl>
+  </div>
+  <form id="qform" novalidate data-quote>
+    <div class="f half"><label for="qName">Име</label><input id="qName" name="name" autocomplete="name" required maxlength="80"></div>
+    <div class="f half"><label for="qPhone">Телефон</label><input id="qPhone" name="phone" type="tel" autocomplete="tel" required maxlength="30"></div>
+    <div class="f"><label for="qEmail">Имейл</label><input id="qEmail" name="email" type="email" autocomplete="email" maxlength="120"></div>
+    <div class="f half"><label for="qType">Превозно средство</label>
+      <select id="qType" name="type"><option>Мотокрос / ендуро</option><option>Пистов мотор</option><option>ATV</option><option>Джет</option><option>Скутер</option><option>Автомобил / бус</option><option>Друго</option></select></div>
+    <div class="f half"><label for="qModel">Модел и година</label><input id="qModel" name="model" placeholder="напр. KTM SX-F 450 2024" maxlength="120"></div>
+    <div class="f half"><label for="qStyle">Дизайн</label><input id="qStyle" name="style" value={style} placeholder="готов дизайн или „по моя идея“" maxlength="80"></div>
+    <div class="f half"><label for="qNo">Номер и име</label><input id="qNo" name="no" value={num} maxlength="40"></div>
+    <div class="f"><label for="qMsg">Идея или въпрос</label><textarea id="qMsg" name="msg" placeholder="Цветове, спонсори, нужен ли е монтаж…" maxlength="3000"></textarea></div>
+    <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+    <label class="consent" for="qOk"><input id="qOk" name="consent" type="checkbox" required> <span>Съгласен съм с <a href="/obshti-usloviya">общите условия</a> и <a href="/poveritelnost">политиката за поверителност</a>.</span></label>
+    <p class="f err" id="qErr" role="alert"></p>
+    <button class="btn btn-plate" type="submit">Изпрати запитване</button>
+    <div class="form-done" id="qDone" hidden role="status"></div>
+  </form>
+</div>
+<script>
+  const f = document.querySelector<HTMLFormElement>("[data-quote]");
+  if (f) {
+    const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+    const qp = new URLSearchParams(location.search);
+    if (qp.get("d")) $("qStyle").value = qp.get("d")!.slice(0, 80);
+    if (qp.get("m")) $("qModel").value = qp.get("m")!.slice(0, 120);
+    if (qp.get("n")) $("qNo").value = qp.get("n")!.slice(0, 40);
+    addEventListener("kit:change", (e: any) => { $("qStyle").value = e.detail.name; $("qNo").value = e.detail.num; });
+    f.addEventListener("submit", async e => {
+      e.preventDefault();
+      const err = $("qErr"), done = document.getElementById("qDone")!, btn = f.querySelector("button")!;
+      err.textContent = "";
+      if (!$("qName").value.trim()) { err.textContent = "Въведи име, за да знаем как да се обърнем към теб."; $("qName").focus(); return; }
+      if ($("qPhone").value.replace(/\D/g, "").length < 6) { err.textContent = "Въведи телефон, на който да ти се обадим."; $("qPhone").focus(); return; }
+      if (!$("qOk").checked) { err.textContent = "Потвърди съгласието с общите условия, за да изпратиш запитването."; $("qOk").focus(); return; }
+      btn.disabled = true; btn.textContent = "Изпращане…";
+      try {
+        if (import.meta.env.PUBLIC_STATIC !== "true") { // static demo has no server: simulate success
+          const res = await fetch("/api/quote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(f))) });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(j.error || "Неуспешно изпращане.");
+        }
+        done.hidden = false; done.innerHTML = "<b>Запитването е изпратено.</b> Ще се свържем с теб в рамките на работния ден.";
+        f.querySelectorAll("input:not([type=checkbox]),textarea").forEach(x => ((x as HTMLInputElement).disabled = true));
+        btn.textContent = "Изпратено";
+      } catch (x: any) {
+        err.textContent = `${x.message} Опитай отново или се обади на 0886 216 097.`;
+        btn.disabled = false; btn.textContent = "Изпрати запитване";
+      }
+    });
+  }
+</script>

@@ -1,0 +1,105 @@
+---
+import "../styles/global.css";
+import { SITE } from "../data/site";
+interface Props { title?: string; description?: string; noindex?: boolean }
+const { title, description = "Графични комплекти за мотокрос, писта, ATV и джетове. Печат Roland TrueVIS върху ARLON фолио, 3D визуализация преди печат, изработка до 7 работни дни.", noindex = false } = Astro.props;
+const demo = import.meta.env.PUBLIC_DEMO === "true";
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | Мото графики`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [["/grafiki", "Графики"], ["/personalen-dizajn", "Персонален дизайн"], ["/#materials", "Материали"], ["/#riders", "Състезатели"], ["/faq", "Въпроси"], ["/kontakti", "Контакти"]];
+const ld = { "@context": "https://schema.org", "@type": "LocalBusiness", name: SITE.name, telephone: "+359886216097", email: SITE.email,
+  address: { "@type": "PostalAddress", streetAddress: "ул. Св. Кирил и Методий 22", addressLocality: "Левски", addressRegion: "Плевен", addressCountry: "BG" },
+  url: Astro.site?.toString(), sameAs: SITE.socials.map(s => s.href) };
+---
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{fullTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonical}>
+  {(noindex || demo) && <meta name="robots" content="noindex">}
+  <meta property="og:title" content={fullTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="bg_BG">
+  <meta name="theme-color" content="#0C0D10">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Tektur:wdth,wght@75..100,500..900&display=swap">
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip" href="#main">Към съдържанието</a>
+  {demo && <div class="demo-bar" role="note">Демо версия на новия сайт. Поръчките и запитванията тук са само за тест.</div>}
+  <header class="hdr">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="Art Me Graphics, начало">
+        <span class="logo-mark" aria-hidden="true">AM</span>
+        <span>ART ME<small>Мото графики</small></span>
+      </a>
+      <nav class="nav" aria-label="Основна навигация">
+        {nav.map(([h, l]) => <a href={h} aria-current={Astro.url.pathname.startsWith(h) && h !== "/" ? "page" : undefined}>{l}</a>)}
+      </nav>
+      <a class="btn btn-plate hdr-cta" href="/personalen-dizajn#quote">Поискай оферта</a>
+      <a class="cart-link" href="/kolichka" aria-label="Количка">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+        <span class="cnt" data-cart-count></span>
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mnav" aria-label="Меню">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h14M3 14h14"/></svg>
+      </button>
+    </div>
+    <div class="wrap mnav" id="mnav" hidden>
+      {nav.map(([h, l]) => <a href={h}>{l}</a>)}
+      <a class="btn btn-plate" href="/personalen-dizajn#quote">Поискай оферта</a>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">AM</span><span>ART ME<small>Мото графики</small></span></a>
+          <p style="margin-top:14px;max-width:32ch">Студио за дизайн, печат и брандиране на превозни средства. Левски, България.</p>
+          <p style="margin-top:12px"><a href={SITE.phoneHref}>{SITE.phone}</a><br><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        </div>
+        <div><h4>Графики</h4><ul>
+          <li><a href="/grafiki/motokros">Мотокрос</a></li>
+          <li><a href="/grafiki/pistovi">Пистови мотори</a></li>
+          <li><a href="/grafiki/atv">ATV</a></li>
+          <li><a href="/grafiki/dzhetove">Джетове</a></li>
+          <li><a href="/personalen-dizajn">Персонален дизайн</a></li></ul></div>
+        <div><h4>Информация</h4><ul>
+          <li><a href="/dostavka">Доставка и плащане</a></li>
+          <li><a href="/faq">Въпроси</a></li>
+          <li><a href="/za-nas">За нас</a></li>
+          <li><a href="/obshti-usloviya">Общи условия</a></li>
+          <li><a href="/poveritelnost">Поверителност</a></li></ul></div>
+        <div><h4>Следвай ни</h4><ul>
+          {SITE.socials.map(s => <li><a href={s.href} rel="noopener" target="_blank">{s.label}</a></li>)}</ul></div>
+      </div>
+      <div class="legal"><span>© {new Date().getFullYear()} Art Me Graphics</span><span>При спор за онлайн покупка можете да използвате <a href="https://consumer-redress.ec.europa.eu/" rel="noopener">платформата за ОРС на ЕК</a>.</span></div>
+    </div>
+  </footer>
+  <div class="mob-bar" id="mobBar"><a class="btn btn-ghost" href="/grafiki">Графики</a><a class="btn btn-plate" href="/personalen-dizajn#quote">Оферта</a></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    import { count } from "../lib/cart";
+    const menuBtn = document.getElementById("menuBtn")!, mnav = document.getElementById("mnav")!;
+    menuBtn.addEventListener("click", () => { const o = mnav.hidden; mnav.hidden = !o; menuBtn.setAttribute("aria-expanded", String(o)); });
+    mnav.addEventListener("click", e => { if ((e.target as Element).closest("a")) { mnav.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
+    const upd = () => { const n = count(); document.querySelectorAll("[data-cart-count]").forEach(el => (el.textContent = n ? String(n) : "")); };
+    upd(); addEventListener("cart:change", upd); addEventListener("storage", upd);
+    const bar = document.getElementById("mobBar")!;
+    const first = document.querySelector("main > section, main > .page-head");
+    if (first) new IntersectionObserver(([e]) => bar.classList.toggle("show", !e.isIntersecting)).observe(first);
+  </script>
+</body>
+</html>

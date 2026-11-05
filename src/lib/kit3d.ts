@@ -24,8 +24,8 @@ export async function mountKit(stage: HTMLElement, scheme: string, num: string):
   scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50); camera.position.set(0, 0.2, 7.2);
   const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3, 4, 5); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xffd31a, 0.7); rim.position.set(-4, 1, -3); scene.add(rim);
-  const red = new THREE.DirectionalLight(0xf0384c, 1.1); red.position.set(4, -1.5, -2); scene.add(red); // racing-red edge light, brand accent
+  const rim = new THREE.DirectionalLight(0xd8b98a, 0.7); rim.position.set(-4, 1, -3); scene.add(rim);
+  const red = new THREE.DirectionalLight(0xe0283f, 1.1); red.position.set(4, -1.5, -2); scene.add(red); // racing-red edge light; champagne rim above
 
   const livC = document.createElement("canvas"); livC.width = 1024; livC.height = 640;
   const plaC = document.createElement("canvas"); plaC.width = 512; plaC.height = 512;

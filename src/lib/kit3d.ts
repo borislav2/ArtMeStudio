@@ -25,7 +25,7 @@ export async function mountKit(stage: HTMLElement, scheme: string, num: string):
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50); camera.position.set(0, 0.2, 7.2);
   const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(3, 4, 5); scene.add(key);
   const rim = new THREE.DirectionalLight(0xffd31a, 0.7); rim.position.set(-4, 1, -3); scene.add(rim);
-  const uv = new THREE.DirectionalLight(0x8e73ff, 1.1); uv.position.set(4, -1.5, -2); scene.add(uv); // UV violet edge light, brand accent
+  const red = new THREE.DirectionalLight(0xf0384c, 1.1); red.position.set(4, -1.5, -2); scene.add(red); // racing-red edge light, brand accent
 
   const livC = document.createElement("canvas"); livC.width = 1024; livC.height = 640;
   const plaC = document.createElement("canvas"); plaC.width = 512; plaC.height = 512;

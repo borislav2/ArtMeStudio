@@ -2,7 +2,7 @@
 // 3D kit stage + colourway/number configurator. `link` = where "order this" goes.
 import { SCHEMES } from "../lib/livery";
 interface Props { scheme?: string; num?: string; showPrice?: boolean; schemes?: string[]; id?: string }
-const { scheme = "neon", num = "27", showPrice = true, schemes = Object.keys(SCHEMES), id = "kit" } = Astro.props;
+const { scheme = "rosso", num = "27", showPrice = true, schemes = Object.keys(SCHEMES), id = "kit" } = Astro.props;
 ---
 <div class="kit" data-kit data-scheme={scheme} data-num={num} id={id}>
   <div class="stage" data-stage>
@@ -31,7 +31,7 @@ const { scheme = "neon", num = "27", showPrice = true, schemes = Object.keys(SCH
   import { SCHEMES, drawLivery } from "../lib/livery";
   document.querySelectorAll<HTMLElement>("[data-kit]").forEach(root => {
     const stage = root.querySelector<HTMLElement>("[data-stage]")!;
-    let scheme = root.dataset.scheme || "neon", num = root.dataset.num || "27";
+    let scheme = root.dataset.scheme || "rosso", num = root.dataset.num || "27";
     let handle: { set(s: string, n: string): void } | null = null;
     const emit = () => {
       root.querySelectorAll("[data-name]").forEach(el => (el.textContent = SCHEMES[scheme].name));

@@ -1,6 +1,7 @@
 // Procedural livery art used by the 3D kit, product cards and placeholders.
 export interface Scheme { name: string; base: string; primary: string; secondary: string; accent: string; plate: string; ink: string }
 export const SCHEMES: Record<string, Scheme> = {
+  rosso:  { name: "Art Me Rosso",  base: "#0E0F12", primary: "#E0283F", secondary: "#2B2F36", accent: "#D8B98A", plate: "#E0283F", ink: "#FFFFFF" },
   neon:   { name: "Neon Rider",    base: "#0E0F12", primary: "#E4FF2E", secondary: "#2B2F36", accent: "#FFFFFF", plate: "#E4FF2E", ink: "#0E0F12" },
   blue:   { name: "Factory Blue",  base: "#0A2A6B", primary: "#2563FF", secondary: "#E9EEF5", accent: "#FFC400", plate: "#FFFFFF", ink: "#0A2A6B" },
   pink:   { name: "Pink Factory",  base: "#17171C", primary: "#FF3EA5", secondary: "#F2F2F2", accent: "#00D1C1", plate: "#FF3EA5", ink: "#111114" },

@@ -1,7 +1,8 @@
 
 /* Layout: night-garage showroom. Glossy 3D kit floats in the hero; below, a paddock-to-podium flow
-   (lines → categories → kits → materials → process → riders → quote). Accent = race number-plate yellow (buying actions).
-   Second accent = racing red "rosso" (design, 3D, laminate, focus): a race-livery pairing with the yellow. */
+   (lines → categories → kits → materials → process → riders → quote).
+   Palette, three colours: graphite ground, racing red for every buying action, champagne for craft details
+   (design, 3D, laminate, focus). Token names are historical: --plate = buy colour, --rosso = champagne detail. */
 :root{
   --ink:#0C0D10;          /* page ground, deep graphite */
   --carbon:#15171B;       /* raised surface */
@@ -9,10 +10,11 @@
   --line:#2C3038;         /* hairlines */
   --fog:#9AA1AC;          /* muted text */
   --paper:#F2F0EA;        /* primary text */
-  --plate:#FFD31A;        /* number-plate yellow: buy, prices, primary CTAs */
-  --rosso:#F0384C;        /* racing red: design craft, 3D, selection and focus (4.97:1 on --ink) */
-  --rosso-ink:#0C0D10;    /* text on rosso */
-  --plate-ink:#121212;    /* text on plate yellow */
+  --plate:#E0283F;        /* racing red: buy and primary CTAs (white text 4.62:1) */
+  --plate-text:#FF5A6A;   /* racing red for text on dark surfaces (6.41:1 on --ink) */
+  --rosso:#D8B98A;        /* champagne: design craft, 3D, selection and focus (10.39:1 on --ink) */
+  --rosso-ink:#0C0D10;    /* text on champagne */
+  --plate-ink:#FFFFFF;    /* text on racing red */
   --ok:#3DDC97;
   --f-display:"Tektur","Arial Narrow",system-ui,sans-serif;
   --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -81,7 +83,7 @@ body:has(#mnav:not([hidden])) .sticky-cta,body:has(#mnav:not([hidden])) .mob-bar
 @media (min-width:980px){.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:32px}}
 .hero h1{font-size:var(--s-xxl);font-stretch:80%;font-weight:900;text-transform:uppercase;line-height:1.12}
 .hero h1 .line{display:block}
-.hero h1 em{font-style:normal;color:var(--plate)}
+.hero h1 em{font-style:normal;color:var(--plate-text)}
 .hero .lead{margin-top:22px;font-size:clamp(1rem,.95rem + .3vw,1.15rem)}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .spec-row{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:30px;font-family:var(--f-mono);font-size:var(--s-xs);color:var(--fog)}
@@ -182,7 +184,7 @@ body:has(#mnav:not([hidden])) .sticky-cta,body:has(#mnav:not([hidden])) .mob-bar
 .step .tag{display:inline-block;margin-top:12px;font-family:var(--f-mono);font-size:.72rem;color:var(--rosso);letter-spacing:.06em}
 .facts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));margin-top:40px}
 .fact{border:1px solid var(--line);border-radius:var(--r);padding:20px;background:var(--ink)}
-.fact b{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(1.8rem,1.4rem + 1.5vw,2.5rem);font-stretch:80%;line-height:1;color:var(--plate);font-variant-numeric:tabular-nums}
+.fact b{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(1.8rem,1.4rem + 1.5vw,2.5rem);font-stretch:80%;line-height:1;color:var(--plate-text);font-variant-numeric:tabular-nums}
 .fact span{display:block;margin-top:8px;color:var(--fog);font-size:var(--s-sm)}
 
 /* Riders */
@@ -322,7 +324,7 @@ img{max-width:100%;height:auto}
 @media (min-width:980px){.summary{position:sticky;top:96px}}
 .summary .row{display:flex;justify-content:space-between;gap:12px;font-size:var(--s-sm);color:var(--fog);font-variant-numeric:tabular-nums}
 .summary .row.total{color:var(--paper);font-family:var(--f-display);font-weight:800;font-size:1.3rem;padding-top:12px;border-top:1px solid var(--line)}
-.summary .row.adv{color:var(--plate)}
+.summary .row.adv{color:var(--plate-text)}
 .summary .note{font-size:var(--s-xs);color:var(--fog)}
 .pay-opts{display:grid;gap:8px}
 fieldset{border:0;padding:0;margin:0;min-width:0}
@@ -356,9 +358,9 @@ legend{padding:0;margin-bottom:8px}
 .demo-bar{background:var(--plate);color:var(--plate-ink);text-align:center;font-size:var(--s-xs);font-weight:600;padding:8px var(--gutter-r) 8px var(--gutter-l)}
 
 /* Mobile call + sticky quote CTA */
-.hdr-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;color:var(--plate)}
+.hdr-call{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;color:var(--plate-text)}
 .hdr-call svg{width:22px;height:22px}
-.sticky-cta{position:fixed;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:6px;background:var(--plate);color:#0C0D10;font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.sticky-cta{position:fixed;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:6px;background:var(--plate);color:var(--plate-ink);font-family:var(--f-display);font-weight:800;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.45)}
 @media (min-width:1040px){.hdr-call,.sticky-cta{display:none}}
 @media (max-width:1039px){footer{padding-bottom:84px}}
 .fact:last-child b{color:var(--rosso)}
